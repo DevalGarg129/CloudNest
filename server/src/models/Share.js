@@ -30,15 +30,25 @@ const shareSchema = new mongoose.Schema({
     timestamps: true
 });
 
-shareSchema.index(
-    {
+shareSchema.index({
         file: 1,
         sharedWith: 1
-    },
-    {
+    },{
         unique: true
     }
 );
 
 const Share = mongoose.model("Share", shareSchema);
 module.exports = Share;
+
+/* This part is important:
+shareSchema.index(
+    { file: 1, sharedWith: 1 },
+    { unique: true }
+);
+It means one user can't have two separate Share documents for the same PDF.
+For example, this combination:
+PDF A + User B
+can occur only once.
+If we need to change: view → download
+we update the existing Share instead of creating another one. */
